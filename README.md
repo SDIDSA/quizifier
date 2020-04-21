@@ -1,5 +1,5 @@
 # quizifier
-A quiz creation tool in form of a web app, written in javascript
+A quiz creation platform, written in javascript
 
 see it working at https://quizifier.herokuapp.com/5088bm/open
 
