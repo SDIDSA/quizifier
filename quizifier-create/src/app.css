@@ -1,0 +1,19 @@
+.app {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.app::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-image: url('images/back.jpg');
+    opacity: .08;
+    z-index: 0;
+}

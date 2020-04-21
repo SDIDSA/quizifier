@@ -1,0 +1,437 @@
+.session {
+    position: absolute;
+    height: calc(100% - 40px);
+    width: calc(100% - 40px);
+    top: 0;
+    left: 0;
+    text-align: center;
+    padding: 20px;
+    z-index: 1;
+    overflow-y: auto;
+}
+
+.session hr {
+    border-bottom: none;
+    border-color: lightgray;
+    margin: 0;
+}
+
+.session .home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 100%;
+}
+
+.session button {
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-size: large;
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+    border-radius: 23px;
+    border: none;
+    background-color: transparent;
+    color: darkgreen;
+    border: 1px solid darkgreen;
+    cursor: pointer;
+    text-transform: uppercase;
+    overflow: hidden;
+    position: relative;
+}
+
+.session button .after {
+    position: absolute;
+    width: 100%;
+    height: 0;
+    bottom: 0;
+    left: 0;
+    background-color: darkgreen;
+    z-index: -1;
+}
+
+.session button.create {
+    padding-right: 40px;
+}
+
+.session button.create .icon {
+    position: absolute;
+    height: 35px;
+    width: 35px;
+    right: 5px;
+    top: 4px;
+    mask-image: url('images/add.svg');
+    mask-size: contain;
+    background-color: darkgreen;
+}
+
+.session .back {
+    position: fixed;
+    height: 40px;
+    width: 40px;
+    top: 20px;
+    left: 20px;
+    border-radius: 50%;
+    background-color: white;
+    border: 1px solid lightgray;
+    background-image: url('images/back.svg');
+    background-size: contain;
+    cursor: pointer;
+    transition: all .3s;
+    z-index: 3;
+
+}
+
+.session div.create {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.session .header {
+    display: block;
+    font-size: x-large;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    text-align: right;
+    text-align: center;
+}
+
+.session .create .title {
+    width: calc(100% - 15px);
+    max-width: 400px;
+    font-size: x-large;
+    padding: 5px;
+    padding-left: 10px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    user-select: auto;
+}
+
+.session .create .description {
+    width: calc(100% - 15px);
+    max-width: 400px;
+    min-height: 200px;
+    font-size: large;
+    padding: 5px;
+    padding-left: 10px;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    resize: none;
+    user-select: auto;
+}
+
+.session .create button {
+    margin-top: 20px;
+    max-width: 200px;
+}
+
+@media only screen and (max-height:520px) and (max-width:360px) {
+    .session .header {
+        margin-left: 70px;
+    }
+}
+
+
+/* ------------------------------------------ */
+/* ------------------------------------------ */
+/* ------------------------------------------ */
+/* ------------------------------------------ */
+
+
+.session>.create>.questions {
+    width: 100%;
+    height: 100%;
+}
+
+.session>.create>.questions>.titDisp {
+    line-height: 40px;
+    display: block;
+    text-align: right;
+    font-weight: bold;
+}
+
+.session>.create>.questions>.top {
+    text-align: center;
+}
+
+.session>.create>.questions>.top>button {
+    width: calc(50% - 10px);
+    max-width: 230px;
+    font-size: small;
+}
+
+.session>.create>.questions>.top>.addQuest {
+    margin-right: 20px;
+}
+
+.session>.create>.questions>.qlist {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px;
+}
+
+.session>.create>.questions>.qlist>.question {
+    padding: 20px;
+    width: calc(100% - 40px);
+    max-width: 460px;
+    background-color: white;
+    margin-top: 20px;
+    text-align: left;
+    border-radius: 5px;
+    box-shadow: 0 0 7px rgba(0,0,0,.5);
+}
+
+.session>.create>.questions>.qlist>.question>.top {
+    display: block;
+    margin-bottom: 15px;
+}
+
+.session>.create>.questions>.qlist>.question>.top>.questText {
+    font-size: large;
+    display: inline-block;
+    width: calc(100% - 70px);
+    margin-right: 10px;
+    padding: 0;
+    border: none;
+    font-size: 16px;
+    resize: none;
+    user-select: auto;
+    height: 50px;
+    text-transform: none;
+}
+
+.session>.create>.questions>.qlist>.question>.top>.points {
+    width: 60px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    bottom: 22px;
+}
+
+.session>.create>.questions>.qlist>.question>.top>.points::after {
+    content: 'points';
+    position: absolute;
+    width: 100%;
+    font-size: small;
+    text-align: center;
+    bottom: -25px;
+}
+
+.session>.create>.questions>.qlist>.question>.top>.points>.inc {
+    display: inline-block;
+    width: 20px;
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+
+    color: white;
+    background-color: darkgreen;
+    cursor: pointer;
+
+    border-bottom-right-radius: 10px;
+}
+
+.session>.create>.questions>.qlist>.question>.top>.points>.dec {
+    display: inline-block;
+    width: 20px;
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+
+    color: white;
+    background-color: darkgreen;
+    cursor: pointer;
+
+    border-top-left-radius: 10px;
+}
+
+.session>.create>.questions>.qlist>.question>.top>.points>.val {
+    display: inline-block;
+    width: 20px;
+    height: calc(100% - 2px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+/* ------------------- */
+
+.session>.create>.questions>.qlist>.question>.answers {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.session>.create>.questions>.qlist>.question>.answers>.answer {
+    position: relative;
+    padding: 10px;
+}
+
+.session>.create>.questions>.qlist>.question>.answers>.answer>input {
+    padding: 0;
+    border: none;
+    margin-left: 10px;
+    font-size: 16px;
+    text-transform: none;
+    user-select: auto;
+}
+
+.session>.create>.questions>.qlist>.question>.answers>.answer>.delete {
+    position: absolute;
+    right: 0;
+    top: 5px;
+    height: 30px;
+    width: 30px;
+    background-image: url('images/delete.svg');
+    background-size: contain;
+    cursor: pointer;
+    transform: scale(.8);
+}
+
+.session>.create>.questions>.qlist>.question>.answers>.answer>.stat {
+    position: absolute;
+    right: 30px;
+    top: 5px;
+    height: 30px;
+    width: 30px;
+    background-image: url('images/incorrect.svg');
+    background-size: contain;
+    cursor: pointer;
+    transform: scale(.8);
+}
+.session>.create>.questions>.qlist>.question>.answers>.answer>.stat.correct {
+    background-image: url('images/correct.svg');
+}
+
+.session>.create>.questions>.qlist>.question>.answers>.add {
+    align-self: center;
+    font-size: small;
+    max-width: 250px;
+    margin-top: 10px;
+    border: none;
+}
+
+/* ------------------- */
+
+.session>.create>.questions>.qlist>.question>.bottom {
+    height: 30px;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.session>.create>.questions>.qlist>.question>.bottom>.delete {
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    position: relative;
+    cursor: pointer;
+}
+
+.session>.create>.questions>.qlist>.question>.bottom>.delete>.icon {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    background-image: url('images/delete.svg');
+    background-size: contain;
+}
+
+.session>.create>.questions>.qlist>.question>.bottom>.delete>.hint {
+    position: absolute;
+    top: 5px;
+    left: -40px;
+    font-weight: bold;
+    opacity: 0;
+}
+
+.session>.create>.link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.session>.create>.link>.hint {
+    display: block;
+    margin-bottom: 20px;
+    text-transform: none;
+}
+
+.session>.create>.link>.href {
+    display: block;
+    text-transform: none;
+    color: darkgreen;
+    background-color: transparent;
+    border: 1px solid gray;
+    padding: 10px;
+    width: 250px;
+}
+
+.session>.create>.link>.copy {
+    max-width: 250px;
+    font-size: medium;
+}
+
+
+
+
+
+
+
+
+
+/*--------------------------------*//*--------------------------------*/
+/*--------------------------------*//*--------------------------------*/
+/*--------------------------------*//*--------------------------------*/
+/*--------------------------------*//*--------------------------------*/
+/*--------------------------------*//*--------------------------------*/
+/*--------------------------------*//*--------------------------------*/
+
+@media (hover: hover) {
+    .session button:hover .after {
+        height: 100%;
+    }
+
+    .session button:hover .icon {
+        background-color: lightgreen;
+    }
+
+    .session button:hover {
+        color: lightgreen;
+        letter-spacing: 3px;
+    }
+
+    .session>.create>.questions>.qlist>.question>.answers>.answer>.delete:hover {
+        transform: scale(1.1) rotate(10deg);
+    }
+
+    .session>.create>.questions>.qlist>.question>.answers>.add:hover {
+        color: black;
+    }
+
+    .session>.create>.questions>.qlist>.question>.bottom>.delete:hover>.hint{
+        opacity: 1;
+        left: -80px;
+    }
+
+    .session>.create>.questions>.qlist>.question>.bottom>.delete:hover>.icon {
+        transform: rotate(10deg) scale(1.2);
+    }
+}

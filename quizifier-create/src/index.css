@@ -1,0 +1,28 @@
+@font-face {
+    font-family: "klavika";
+    src: url("fonts/klavika.otf");
+}
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap');
+
+
+* {
+    font-family: 'IBM Plex Sans', sans-serif;
+    text-transform: capitalize;
+    transition: all .3s;
+    user-select: none;
+}
+
+*:focus {
+    outline: none !important;
+}
+
+html, body,#root {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+
+    padding: 0;
+    margin: 0;
+    background-color: white;
+}

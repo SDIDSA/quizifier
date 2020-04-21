@@ -1,0 +1,539 @@
+.app {
+    width: 100%;
+    height: 100%;
+}
+
+.app::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('images/back.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    opacity: 0.12;
+}
+
+.app hr {
+    border-bottom: none;
+    border-top: 1px solid lightgray;
+    margin: 0;
+}
+
+.app>.open {
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
+}
+
+.app>.open>.header {
+    display: block;
+    position: relative;
+    background-color: white;
+    width: calc(100% - 80px);
+    top: 0;
+    right: 0;
+    left: 0;
+    margin: auto;
+    margin-bottom: 20px;
+    padding: 20px;
+    max-width: 600px;
+    box-shadow: 0 0 5px 3px rgba(0,0,0,.2);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    transition: none;
+    z-index: 1;
+}
+
+.app>.open>.header>.tit {
+    display: block;
+    font-weight: bold;
+    font-size: x-large;
+}
+
+.app>.open>.header>.desc {
+    display: block;
+    margin-top: 15px;
+    max-height: 30px;
+    opacity: 1;
+}
+
+.app>.open>.header.collapsed>.desc {
+    margin-top: 0px;
+    max-height: 0;
+    opacity: 0;
+}
+
+.app>.open>.question {
+    display: block;
+    background-color: white;
+    width: calc(100% - 80px);
+    margin: auto;
+    padding: 20px;
+    max-width: 600px;
+    box-shadow: 0 0 5px 3px rgba(0,0,0,.2);
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+
+.app>.open>.question>.top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.app>.open>.question>.top>.text {
+    font-size: larger;
+    width: calc(100% - 80px);
+}
+
+.app>.open>.question>.top>.points {
+    font-size: normal;
+    font-weight: bold;
+    min-width: 60px;
+}
+
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+
+.app>.open>.question>.answer {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 0px;
+    cursor: pointer;
+}
+
+.app>.open>.question>.answer>.letter {
+    font-size: small;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+
+.app>.open>.question>.answer.selectd {
+    background-color: rgba(0, 100, 0, 0.2);
+    border-radius: 60px;
+    padding-left: 20px;
+}
+
+.app>.open>.question>.answer.selectd>.letter {
+    margin-right: 20px;
+}
+
+.app>.open>.question>.answer>.letter>.six {
+    width: 5px;
+    border-bottom: 1px solid black;
+    margin-left: 5px;
+    position: relative;
+    top: 1px;
+}
+
+.app>.open>.question>.answer.selectd>.letter>.six {
+    width: 13px;
+    margin-left: 15px;
+}
+
+.app>.open>.question>.answer>.letter>.six>.shape {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    right: 0;
+    bottom: -3px;
+    transform: scaleY(0);
+}
+
+.app>.open>.question>.answer>.letter>.six>.shape::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 1px;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    transform: rotate(45deg);
+}
+
+.app>.open>.question>.answer.selectd>.letter>.six>.shape {
+    transform: scaleY(1);
+}
+
+.answer + .answer {
+    margin-top: 0px !important;
+}
+
+.app>.open>.question>.answer + hr {
+    margin-top: 10px;
+}
+
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+
+.app>.open>.question>.bottom {
+    margin-top: 13px;
+}
+
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+
+.app>.open>.bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 40px;
+}
+
+.app>.open>.bottom>.error {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    max-height: 0;
+    opacity: 0;
+    color: rgb(145, 55, 55);
+}
+
+.app>.open>.bottom>.error.shown {
+    margin-bottom: 15px;
+    max-height: 20px;
+    opacity: 1;
+}
+
+.app>.open>.bottom>button {
+    font-size: x-large;
+    padding: 10px;
+    background-color: transparent;
+    border: 1px solid darkgreen;
+    cursor: pointer;
+    min-width: 250px;
+    border-radius: 100px;
+    text-transform: capitalize;
+    font-weight: bold;
+    color: darkgreen;
+}
+
+.app>.open>.bottom>button:hover {
+    letter-spacing: 3px;
+    color:black;
+    border-color: black;
+}
+
+
+
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
+
+.app>.correction {
+    height: 100%;
+    overflow-y: scroll;    
+}
+
+.app>.correction>.summary {
+    background-color: white;
+    padding: 20px;
+    margin: 20px;
+    margin-top: 0;
+    margin: auto;
+    width: calc(100% - 80px);
+    max-width: 500px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    box-shadow: 0 0 5px 0 rgba(0,0,0,0.5);
+    margin-bottom: 20px;
+}
+
+.app>.correction>.summary>.title {
+    font-size: x-large;
+    position: relative;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.app>.correction>.summary>.title>.side {
+    position: absolute;
+    font-size: large;
+    right:0;
+    bottom: 2px;
+}
+
+.app>.correction>.summary>.title::after {
+    content: 'résultats';
+    font-size: 20px;
+    font-style: italic;
+    margin-left: 5px;
+    position: absolute;
+    left: calc(100px + 25px);
+    bottom: 1px;
+}
+
+.app>.correction>.summary>.title::before {
+    content: '-';
+    position: absolute;
+    font-size: 20px;
+    font-style: italic;
+    margin-left: 5px;
+    bottom: 1px;
+    left: calc(100px + 10px);
+    transform: scaleX(1.5);
+}
+
+.app>.correction>.summary>.line {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.app>.correction>.summary .number {
+    margin-right: 15px;
+    margin-left: 5px;
+}
+
+.app>.correction>.summary .number.good {
+    color: green;
+    font-size: x-large;
+    margin-right: 10px;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.app>.correction>.summary .number.bad {
+    color: rgb(201, 0, 0);
+    font-size: x-large;
+    margin-right: 10px;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.app>.correction>.detailed {
+    background-color: white;
+    margin: 20px;
+    margin: auto;
+    width: calc(100% - 40px);
+    max-width: 540px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px 0 rgba(0,0,0,0.5);
+    margin-bottom: 20px;
+}
+
+.app>.correction>.detailed>.question {
+    padding: 20px;
+}
+
+.app>.correction>.detailed>.question + .question {
+    border-top: 1px solid darkgray;
+}
+
+.app>.correction>.detailed>.question.correct {
+    background-color: rgba(0, 128, 0, 0.15);
+}
+
+.app>.correction>.detailed>.question.incorrect {
+    background-color: rgba(128, 0, 0, 0.15);
+}
+
+.app>.correction>.detailed>.question>.top {
+    display: flex;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid darkgray;
+}
+
+.app>.correction>.detailed>.question>.top>.txt {
+    font-size: large;
+    display: inline-block;
+    width: calc(100% - 80px);
+    margin-right: 20px;
+}
+
+.app>.correction>.detailed>.question>.top>.points {
+    width: 60px;
+    font-size: small;
+    font-weight: bold;
+}
+
+.app>.correction>.detailed>.question>.top + .answer {
+    margin-top: 15px;
+}
+
+.app>.correction>.detailed>.question>.answer {
+    padding: 10px;
+    padding-left: 20px;
+    border-radius: 50px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.app>.correction>.detailed>.question>.answer.correct {
+    background-color: rgba(4, 217, 255, 0.63);
+    box-shadow: inset 0 0 5px 0 rgb(0,0,0,0.3);
+}
+
+.app>.correction>.detailed>.question>.answer.correct.selected {
+    background-color: rgba(15, 228, 15, 0.5);
+    box-shadow: inset 0 0 5px 0 rgb(0,0,0,0.3);
+}
+
+.app>.correction>.detailed>.question>.answer.incorrect.selected {
+    background-color: rgba(228, 15, 15, 0.3);
+    box-shadow: inset 0 0 5px 0 rgb(0,0,0,0.3);
+}
+
+
+.choix {
+    display: block;
+    background-color: white;
+    padding: 20px;
+    margin: auto;
+    width: calc(100% - 80px);
+    max-width: 500px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    box-shadow: 0 0 5px 0 rgb(0,0,0,0.5);
+}
+
+.choix>.line {
+    margin-top: 20px;
+}
+
+.choix>.line>.num {
+    margin-right: 20px;
+}
+
+.choix>.hint {
+    font-size: large;
+}
+
+.choix>.line>select {
+    width: calc(100% - 60px);
+    cursor: pointer;
+}
+
+
+.choix>.bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+
+.choix>.bottom>.error {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    max-height: 0;
+    opacity: 0;
+    color: rgb(145, 55, 55);
+    pointer-events: none;
+}
+
+.choix>.bottom>.error.shown {
+    margin-bottom: 15px;
+    max-height: 35px;
+    opacity: 1;
+}
+
+.choix>.bottom>button {
+    font-size: large;
+    padding: 10px;
+    background-color: transparent;
+    border: 1px solid darkgreen;
+    cursor: pointer;
+    min-width: 250px;
+    border-radius: 100px;
+    text-transform: capitalize;
+    font-weight: bold;
+    color: darkgreen;
+}
+
+.choix>.bottom>button:hover {
+    letter-spacing: 3px;
+    color:black;
+    border-color: black;
+}
+
+
+
+.loading {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading > .loader {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid darkgreen;
+    border-width: 15px;
+    border-color: darkgreen;
+    border-style: double solid;
+    animation: rotate ease-in-out .8s infinite;
+    margin-bottom: 40px;
+}
+
+.loading::after {
+    content: 'Chargement...';
+    display: block;
+    font-weight: bold;
+    font-size: large;
+}
+
+@keyframes rotate{
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(180deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

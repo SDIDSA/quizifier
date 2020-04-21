@@ -1,0 +1,333 @@
+
+
+.auth {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    overflow: auto;
+    display: block;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.auth .root {
+    width: calc(100% - 40px);
+    max-width: 400px;
+    padding: 20px;
+    height: 320px;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    right: 0;
+    left: 0;
+    margin: auto;
+}
+
+.auth > .root > .icon svg{
+    width: 180px;
+    height: 180px;
+    filter: drop-shadow(0 0 10px rgb(60, 155, 60));
+}
+
+.auth .hint {
+    font-weight: bold;
+    padding: 20px;
+    display: block;
+    margin: 10px;
+    line-height: 30px;
+}
+
+.auth .field {
+    display: block;
+    margin: 40px;
+    height: 40px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.auth .field .wrapper {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.auth .password::-ms-reveal {
+    display: none;
+}
+
+.auth .field input {
+    position: relative;
+    width: calc(100% - 60px);
+    height: 100%;
+    left: 0;
+    border: none;
+    background-color: transparent;
+    padding-left: 10px;
+    padding-right: 50px;
+    font-size: x-large;
+    font-weight: normal;
+    font-family: monospace;
+    user-select: auto;
+    text-transform: none;
+}
+
+.auth .field .placeholder {
+    position: absolute;
+    width: calc(100% - 10px);
+    height: 100%;
+    left: 0;
+    top: -35px;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.auth .field .underbot {
+    position: absolute;
+    width: 100%;
+    bottom: -5px;
+    left: 0;
+    height: 4px;
+    background-color: darkgray;
+    z-index: 0;
+    border-radius: 2px;
+}
+
+.auth .field .bot {
+    position: absolute;
+    width: 100%;
+    bottom: -5px;
+    left: 0;
+    height: 4px;
+    background-color: darkgreen;
+    z-index: 1;
+    border-radius: 2px;
+}
+
+.auth .field.shown .text {
+    pointer-events: auto;
+    top: 0;
+}
+
+.auth .field.shown .password {
+    pointer-events: none;
+    top: 0;
+}
+
+.auth .field.hidden .text {
+    pointer-events: none;
+    top: -40px;
+}
+
+.auth .field.hidden .password {
+    pointer-events: auto;
+    top: -40px;
+}
+
+.auth .field .icon {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    right: 5px;
+    bottom: 5px;
+    cursor: pointer;
+    filter: none !important;
+}
+
+.auth .field .icon .eye{
+    position: absolute;
+    width: 25px;
+    right: 2.5px;
+    top: 10px;
+}
+
+.auth .field .icon .lid{
+    position: absolute;
+    width: 100%;
+    right: 0;
+}
+
+.auth .field.shown .eye {
+    transform: scaleY(1);
+}
+
+.auth .field.hidden .eye {
+    transform: scaleY(0);
+    opacity: 0;
+}
+
+.auth .field.hidden .lid {
+    transform: rotateX(180deg);
+    top: 13px;
+}
+
+.auth .field.shown .lid {
+    transform: rotateX(0deg);
+    top: 0;
+    background-color: transparent;
+}
+
+.auth .field.shown .text:placeholder-shown + .password + .placeholder {
+    top: 0;
+}
+
+.auth .field.hidden .password:placeholder-shown + .placeholder {
+    top: 0;
+}
+
+.auth .field.shown .text:placeholder-shown + .password + .placeholder + .bot {
+    width: 0;
+}
+
+.auth .field.hidden .password:placeholder-shown + .placeholder + .bot {
+    width: 0;
+}
+
+.auth .field.shown .text:focus + .password + .placeholder + .bot {
+    width: 100%;
+}
+
+.auth .field.hidden .password:focus + .placeholder + .bot {
+    width: 100%;
+}
+
+
+.auth button {
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-size: large;
+    padding: 10px;
+    width: calc(100% - 80px);
+    border-radius: 100px;
+    border: none;
+    background-color: transparent;
+    color: darkgreen;
+    border: 1px solid darkgreen;
+    cursor: pointer;
+    text-transform: uppercase;
+    overflow: hidden;
+    position: relative;
+}
+
+.auth button .after {
+    position: absolute;
+    width: 100%;
+    height: 0;
+    bottom: 0;
+    left: 0;
+    background-color: darkgreen;
+    z-index: -1;
+}
+
+.auth button:hover .after {
+    height: 100%;
+}
+
+.auth button:hover {
+    color: lightgreen;
+    letter-spacing: 5px;
+}
+
+.auth .error {
+    display: block;
+    width: 100%;
+    max-height: 15px;
+    min-height: 15px;
+    padding-bottom: 15px;
+    opacity: 1;
+    color: rgb(161, 59, 59);
+}
+
+.auth .error.empty {
+    max-height: 0px;
+    min-height: 0px;
+    opacity: 0;
+}
+
+
+.auth .loading {
+    display: inline-block;
+    border: 8px darkgreen;
+    border-style: double solid;
+    stroke-dasharray: 10px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-top: 10px;
+    animation: spin 1s infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); border-color: green;}
+    50% { transform: rotate(180deg); border-color: darkgreen;}
+    100% { transform: rotate(360deg); border-color: green;}
+  }
+
+
+.auth .credits {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: auto;
+    text-align: center;
+    font-weight: bold;
+    font-size: large;
+    width: 150px;
+    font-size: small;
+}
+
+.auth .credits a {
+    position: relative;
+    background-color: #3b5998;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color:white;
+    text-decoration: none;
+    font-weight: normal;
+    font-family: 'Klavika';
+    padding: 5px;
+    margin-left: 5px;
+    padding-bottom: 0;
+    min-height: 0px;
+    float: right;
+    min-width: 80px;
+}
+
+.auth .credits .init {
+    float: left;
+    position: relative;
+    top: 2px;
+    left: 0px;
+}
+
+.auth .credits a .after {
+    content: '';
+    position: absolute;
+    width: 55%;
+    height: 55%;
+    left: calc(22.5% - 2px);
+    bottom: -100%;
+    pointer-events: none;
+    background-image: url('https://scontent-mrs2-1.xx.fbcdn.net/v/t1.0-9/88339917_644927006331147_3527581555033636864_n.jpg?_nc_cat=109&_nc_sid=85a577&_nc_ohc=91yaXqwzC5EAX-L0lOO&_nc_ht=scontent-mrs2-1.xx&oh=d9b32007eadfdf537c6f1963bbf3fa67&oe=5EC0FF26');
+    background-size: contain;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.auth .credits a:hover {
+    min-height: 80px;
+}
+
+.auth .credits a:hover .after {
+    bottom: 10%;
+}
+
+.auth .credits a:hover + .init {
+    transform: rotate(-90deg);
+    top: 30px;
+    left: 23px;
+}
