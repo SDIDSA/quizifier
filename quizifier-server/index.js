@@ -31,7 +31,7 @@ app.post('/auth', (req,res) => {
 });
 
 app.post('/create', async (req,res) => {
-    let data = JSON.parse(req.query.data);
+    let data = JSON.parse(decodeURIComponent(req.query.data));
     if(verifyKey(data.key)) {
         let id = await generateQuizId();
 

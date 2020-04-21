@@ -228,7 +228,7 @@ const Create = (props) => {
 
     const submit = ()=>  {
         let data = JSON.stringify({key:props.authKey,title: tit,description: desc,questions:questions});
-        axios.post(props.api + 'create?data=' + data)
+        axios.post(props.api + 'create?data=' + encodeURIComponent(data))
             .then(data=> {
                 let res = data.data;
                 if(res === 'bad_key') {
