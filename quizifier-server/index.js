@@ -5,16 +5,36 @@ app.use(cors());
 
 let sha1 = require('js-sha1');
 
-const sqlite3 = require('sqlite3').verbose();
+const { Pool, Client } = require('pg');
 
-let forms = new sqlite3.Database('./forms.db', (err) => {
-    if (err) {
-      console.error(err.message);
-    }
-    console.log('Connected to the database.');
+const extractData = (url) => {
+    let arr = url.split(':');
+    let sec = arr[2].split('@');
+    let third = arr[3].split('/');
+    return {
+        username:arr[1].replace('//',''),
+        password:sec[0],
+        host:sec[1],
+        port:parseInt(third[0]),
+        database:third[1]
+    };
+}
+
+let data = extractData(process.env.DATABASE_URL || 'postgres://yuswtvsojvyqsb:98382c1bf55abc5af1620d519230cf9b64c83704c80842ea0df124b4924375e3@ec2-34-194-198-176.compute-1.amazonaws.com:5432/df9lk9en8l2gu7');
+
+console.log(data);
+
+const forms = new Pool({
+    user: data.username,
+    host: data.host,
+    database: data.database,
+    password: data.password,
+    port: data.port,
+    ssl: { rejectUnauthorized: false }
 });
 
 let correct = sha1('sdidsad99');
+console.log(correct);
 
 const verifyKey = (key)=> {
     return String(key) === String(correct);
@@ -33,104 +53,77 @@ app.post('/auth', (req,res) => {
 app.post('/create', async (req,res) => {
     let data = JSON.parse(decodeURIComponent(req.query.data));
     if(verifyKey(data.key)) {
-        let id = await generateQuizId();
-
-        let success = true;
-        
-        await forms.run(`insert into quiz values('${id}',"${data.title}","${data.description}")`, [], function(err){
-            if(err) {
-                console.log(`insert into quiz values('${id}',"${data.title}","${data.description}")`)
-                console.log(err);
-                success = false;
-            }
-        });
-
-        if(!success) {
-            res.end('fail');
-            return;
-        }
-
-        for(let i = 0;i<data.questions.length;i++) {
-            let quest = data.questions[i];
-
-            await forms.run(`insert into question values('${id}',${i},${quest.points},"${quest.text}")`, [], function(err){
-                if(err) {
-                    console.log(`insert into question values('${id}',${i},${quest.points},"${quest.text}")`)
-                    console.log(err);
-                    success = false;
+        let id = await generateFormId();
+        await forms.query(`insert into forms values('${id}','${data.title}','${data.description}')`);
+        for(let i = 0;i<data.sections.length;i++) {
+            await forms.query(`insert into section values('${id}',${i},'${data.sections[i].text}')`);
+            for(let j = 0;j<data.sections[i].questions.length;j++) {
+                await forms.query(`insert into question values('${id}',${i},'${j}','${data.sections[i].questions[j].text}',${data.sections[i].questions[j].points})`);
+                for(let k = 0;k<data.sections[i].questions[j].answers.length;k++) {
+                    await forms.query(`insert into answer values('${id}',${i},'${j}','${k}','${data.sections[i].questions[j].answers[k].text}',${data.sections[i].questions[j].answers[k].correct ? 1:0})`);
                 }
-            });
-
-            for(let j = 0;j<quest.answers.length;j++) {
-                let answer = quest.answers[j];
-    
-                await forms.run(`insert into answer values('${id}',${i},${j},${answer.correct ? 1:0},"${answer.text}")`, [], function(err){
-                    if(err) {
-                        console.log(`insert into answer values('${id}',${i},${j},${answer.correct ? 1:0},"${answer.text}")`)
-                        console.log(err);
-                        success = false;
-                    }
-                });
             }
         }
-
-        if(!success) {
-            res.end('fail');
-            return;
-        }
-
         res.end(id);
-    }else{
-        res.end('bad_key');
     }
 });
 
 app.post('/getQuiz', async (req,res) => {
     let id = req.query.id;
 
-        forms.all(`select * from quiz where id='${id}'`,[], (err, quizes) => {
-            if(quizes.length === 0) {
-                res.end('not found');
-            }else {
-                let title = quizes[0].title;
-                let description = quizes[0].description;
-    
-                forms.all(`select * from question where quiz_id='${id}' order by pos`, [], (err, quests) => {
-                    if(quests.length === 0) {
-                        res.end('no questions');
-                    }else {
-                        let questions = [];
-                        quests.forEach(quest => {
-                            questions.push(
-                                {
-                                    text:quest.question,
-                                    points:quest.points,
-                                    answers:[]
-                                });
-                        });
-    
-                        forms.all(`select * from answer where quiz_id='${id}' order by question_pos,pos`, [], (err, ans) => {
-                            ans.forEach(answer => {
-                                console.log(answer.question_pos);
-                                questions[answer.question_pos].answers.push(
-                                    {
-                                        text:answer.answer,
-                                        correct:answer.correct
-                                    });
-                            });
-                            let qu = {id:id, title:title, description:description, questions:questions};
-                            res.json(qu);
-                        });
-                    }
-                });
-            }
-        });
+    let fo = await forms.query(`select * from forms where id='${id}'`);
+
+    if(fo.rows.length === 0) {
+        res.end('not found');
+    }else {
+        let row = fo.rows[0];
+        let form = {
+            tit:row.tit,
+            desc:row.desc,
+            sections:[]
+        }
+
+        let sects = await forms.query(`select * from section where form_id='${id}'`);
+
+        for(let i = 0; i<sects.rows.length; i++) {
+            form.sections.push({
+                pos:sects.rows[i].pos,
+                tit:sects.rows[i].tit,
+                questions:[]
+            });
+        }
+
+        let questions = await forms.query(`select * from question where form_id='${id}'`);
+
+        for(let i = 0; i<questions.rows.length;i++) {
+            let section = questions.rows[i].section;
+            form.sections[section].questions.push({
+                pos:questions.rows[i].pos,
+                text:questions.rows[i].text,
+                points:questions.rows[i].points,
+                answers:[]
+            });
+        }
+
+        let answers = await forms.query(`select * from answer where form_id='${id}'`);
+
+        for(let i = 0; i<answers.rows.length;i++) {
+            let section = answers.rows[i].section;
+            let question = answers.rows[i].question;
+            form.sections[section].questions[question].answers.push({
+                pos:answers.rows[i].pos,
+                text:answers.rows[i].text,
+                correct:answers.rows[i].correct
+            });
+        }
+
+        res.json(form);
+    }
+    res.end('');
 });
 
 app.post('/submitAnswers', async (req,res) => {
     let data = JSON.parse(req.query.data);
-    
-    let id = await generateAnswerId(data.id);
 
     res.end(id);
 })
@@ -139,50 +132,27 @@ http.listen(process.env.PORT || 4242, function(){
     console.log(`listening on *:${process.env.PORT || 4242}`);
 });
 
-const generateAnswerId = async (quizid) => {
-    let potentialId = '';
+
+const generateFormId = async ()=> {
+    let id = "";
     let used = true;
+
     while(used) {
-        potentialId = randomString(6);
-        used = await checkAnswerId(potentialId,quizid);
+        id = randomString(10);
+        used = await checkFormId(id);
     }
-    return potentialId;
+
+    return id;
 }
 
-const checkAnswerId = async (id,quizid) => {
-    let res = false;
-    await forms.all("SELECT * FROM answers where quiz_id='"+quizid+"'", function(err,rows){
-        if(err) return 'error';
-        rows.forEach(function (row) { 
-            if(row.id === id) {
-                res = true;
-            }
-        });
-    });
-    return res;
-}
+const checkFormId = async (id)=> {
+    let res = await forms.query(`select * from forms where id = '${id}'`);
 
-const generateQuizId = async () => {
-    let potentialId = '';
-    let used = true;
-    while(used) {
-        potentialId = randomString(6);
-        used = await checkQuizId(potentialId);
+    if(res.rowCount === 0) {
+        return false;
+    }else {
+        return true;
     }
-    return potentialId;
-}
-
-const checkQuizId = async (id) => {
-    let res = false;
-    await forms.all("SELECT * FROM quiz", function(err,rows){
-        if(err) return 'error';
-        rows.forEach(function (row) { 
-            if(row.id === id) {
-                res = true;
-            }
-        });
-    });
-    return res;
 }
 
 const randomString = (length) => {

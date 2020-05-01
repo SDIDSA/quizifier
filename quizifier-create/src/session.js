@@ -12,7 +12,7 @@ const copyToClipboard = str => {
 const createAnswer = ()=> {
     return {
         text:'',
-        correct:true,
+        correct:false,
     }
 }
 
@@ -22,6 +22,13 @@ const createQuestion = ()=> {
         answers:[createAnswer()],
         points:1
     };
+}
+
+const createSection = ()=> {
+    return {
+        text:'',
+        questions:[createQuestion()]
+    }
 }
 
 const Answer = (props)=> {
@@ -42,7 +49,7 @@ const Answer = (props)=> {
         <span>{alpha[props.pos]} - </span>
         <input value={props.data.text} onChange={(event) => {setText(event.target.value)}} placeholder='entrez la réponse ici' />
         <span className={`stat${props.data.correct ? ' correct':''}`} onClick={setCorrect}/>
-        {props.pos > 0 ? <span className='delete' onClick={deleteAnswer}/>:''}
+        {props.size > 1 ? <span className='delete' onClick={deleteAnswer}/>:''}
     </div>;
 }
 
@@ -89,7 +96,7 @@ const Question = (props) => {
         <hr />
 
         <div className='answers'>
-            {props.data.answers.map((val,index)=> <Answer setCorrect={setCorrect} setAnswer={setAnswer} deleteAnswer={deleteAnswer} key={index} pos={index} data={val}/>)}
+            {props.data.answers.map((val,index)=> <Answer size={props.data.answers.length} setCorrect={setCorrect} setAnswer={setAnswer} deleteAnswer={deleteAnswer} key={index} pos={index} data={val}/>)}
             <button className='add' onClick={addAnswer}>
                 ajouter une réponse
             </button>
@@ -99,7 +106,7 @@ const Question = (props) => {
 
         <div className='bottom'>
             <span className='pos'>Question {props.pos + 1}</span>
-            {props.pos > 0 ? <span className='delete' onClick={()=>props.deleteSelf(props.pos)}>
+            {props.size > 1 ? <span className='delete' onClick={()=>props.deleteSelf(props.pos)}>
                 <span className='icon'/>
                 <span className='hint'>Supprimer</span>
             </span>:''}
@@ -107,127 +114,239 @@ const Question = (props) => {
     </div>;
 }
 
+const Section = (props)=> {
+
+    const deleteSection = () => {
+        props.deleteSection(props.pos);
+    }
+
+    const addQuest = () => {
+        props.addQuest(props.pos);
+    }
+
+    const updateText = (question, text) => {
+        props.updateText(props.pos, question, text);
+    }
+
+    const incPoints = (question) => {
+        props.incPoints(props.pos, question);
+    }
+
+    const decPoints = (question) => {
+        props.decPoints(props.pos, question);
+    }
+
+    const deleteQuest = (question) => {
+        props.deleteQuest(props.pos, question);
+    }
+
+    const addAnswer = (question) => {
+        props.addAnswer(props.pos, question);
+    }
+
+    const deleteAnswer = (question, answer) => {
+        props.deleteAnswer(props.pos, question, answer);
+    }
+
+    const setAnswer = (question, answer, txt) => {
+        props.setAnswer(props.pos, question, answer, txt);
+    }
+
+    const setCorrect = (question, answer) => {
+        props.setCorrect(props.pos, question, answer);
+    }
+
+    const changed = (event) => {
+        props.updateSection(props.pos, event.target.value);
+    }
+
+    return <div className='section'>
+        <div className='head'>
+            <button onClick={addQuest}>Ajouter<span class='ad'>une question</span></button>
+            <button className={props.size === 1 ? 'dis':''} onClick={deleteSection}>Supprimer<span class='ad'>la section</span></button>
+            <input placeholder='Nom de la section' onChange={changed} value={props.data.text}></input>
+        </div>
+        {props.data.questions.map((val,index) => <Question size={props.data.questions.length} setCorrect={setCorrect} setAnswer={setAnswer} deleteAnswer={deleteAnswer} addAnswer={addAnswer} incPoints={incPoints} decPoints={decPoints} updateText={updateText} deleteSelf={deleteQuest} key={index} pos={index} data={val}/>)}
+    </div>;
+}
+
 const Create = (props) => {
     const [tit, setTit] = useState('');
     const [desc, setDesc] = useState('');
 
-    const [questions, setQuestions] = useState([createQuestion()]);
+    const [sections, setSections] = useState([createSection()]);
 
     const [id, setId] = useState('');
 
     const [state, setState] = useState('title');
 
+    const [loading, setLoading] = useState(false);
+
     const changeState = (state) => {
         setState(state);
     }
 
-    const addQuest = () => {
-        setQuestions(prevState => (
-           [...prevState, createQuestion()]
-        ))
+    const addSection = ()=> {
+        setSections(prevState => ([...prevState, createSection()]));
     }
 
-    const updateText = (index, text) => {
-        let newQuestions = [];
-        for(let i = 0;i<questions.length;i++){
-            newQuestions.push(questions[i]);
-            if(i === index) {
-                newQuestions[i].text = text;
+    const deleteSection = (section) => {
+        let newSex = [];
+        for(let i = 0;i<sections.length;i++){
+            if(i !== section){
+                newSex.push(sections[i]);
             }
         }
-        setQuestions(newQuestions);
+        setSections(newSex);
     }
 
-    const incPoints = (index) => {
-        let newQuestions = [];
-        for(let i = 0;i<questions.length;i++){
-            newQuestions.push(questions[i]);
-            if(i === index) {
-                newQuestions[i].points++;
+    const updateSection = (section, text) => {
+        let newSex = [];
+        for(let i = 0;i<sections.length;i++){
+            newSex.push(sections[i]);
+            if(i === section){
+                newSex[i].text = text;
             }
         }
-        setQuestions(newQuestions);
+        setSections(newSex);
     }
 
-    const decPoints = (index) => {
-        let newQuestions = [];
-        for(let i = 0;i<questions.length;i++){
-            newQuestions.push(questions[i]);
-            if(i === index) {
-                newQuestions[i].points--;
+    const addQuest = (section) => {
+        let newSex = [];
+        for(let i = 0;i<sections.length;i++){
+            newSex.push(sections[i]);
+            if(i === section){
+                newSex[i].questions.push(createQuestion());
             }
         }
-        setQuestions(newQuestions);
+        setSections(newSex);
     }
 
-    const deleteQuest = (index) => {
-        let newQuestions = [];
-        for(let i = 0;i<questions.length;i++){
-            if(i !== index){
-                newQuestions.push(questions[i]);
+    const updateText = (section, question, text) => {
+        let newSex = [];
+        for(let i = 0;i<sections.length;i++){
+            newSex.push(sections[i]);
+            if(i === section){
+                newSex[i].questions[question].text = text;
             }
         }
-        setQuestions(newQuestions);
+        setSections(newSex);
     }
 
-    const addAnswer = (index) => {
-        let newQuestions = [];
-        for(let i = 0;i<questions.length;i++){
-            newQuestions.push(questions[i]);
-            if(i === index) {
-                let answer = createAnswer();
-                answer.correct =false;
-                newQuestions[i].answers.push(answer);
+    const incPoints = (section, question) => {
+        let newSex = [];
+        for(let i = 0;i<sections.length;i++){
+            newSex.push(sections[i]);
+            if(i === section){
+                newSex[i].questions[question].points++;
             }
         }
-        setQuestions(newQuestions);
+        setSections(newSex);
     }
 
-    const deleteAnswer = (question,answer) => {
-        let newQuestions = [];
-        for(let i = 0;i<questions.length;i++){
-            newQuestions.push(questions[i]);
-            if(i === question) {
-                let oldAnswers = questions[i].answers;
-                let newAnswers = [];
-                for(let j = 0;j<oldAnswers.length;j++) {
-                    if(j !== answer) {
-                        newAnswers.push(oldAnswers[j]);
+    const decPoints = (section, question) => {
+        let newSex = [];
+        for(let i = 0;i<sections.length;i++){
+            newSex.push(sections[i]);
+            if(i === section){
+                newSex[i].questions[question].points--;
+            }
+        }
+        setSections(newSex);
+    }
+
+    const deleteQuest = (section, question) => {
+       let newSex = [];
+        for(let i = 0;i<sections.length;i++){
+            if(i !== section){
+                newSex.push(sections[i]);
+            }else {
+                let newSection = {
+                    text:sections[i].text,
+                    questions:[]
+                };
+                for(let j = 0;j<sections[i].questions.length;j++) {
+                    if(j !== question) {
+                        newSection.questions.push(sections[i].questions[j]);
                     }
                 }
-                newQuestions[i].answers = newAnswers;
+                newSex.push(newSection);
             }
         }
-        setQuestions(newQuestions);
+        setSections(newSex);
     }
 
-    const setAnswer = (question, answer, txt) => {
-        let newQuestions = [];
-        for(let i = 0;i<questions.length;i++){
-            newQuestions.push(questions[i]);
-            if(i === question) {
-                newQuestions[i].answers[answer].text = txt;
+    const addAnswer = (section, question) => {
+        let newSex = [];
+        for(let i = 0;i<sections.length;i++){
+            newSex.push(sections[i]);
+            if(i === section){
+                newSex[i].questions[question].answers.push(createAnswer());
             }
         }
-        setQuestions(newQuestions);
+        setSections(newSex);
     }
 
-    const setCorrect = (question, answer) => {
-        let newQuestions = [];
-        for(let i = 0;i<questions.length;i++){
-            newQuestions.push(questions[i]);
-            if(i === question) {
-                for(let j = 0;j<questions[i].answers.length;j++) {
-                    newQuestions[i].answers[j].correct = false;
+    const deleteAnswer = (section, question, answer) => {
+        let newSex = [];
+        for(let i = 0;i<sections.length;i++){
+            if(i !== section){
+                newSex.push(sections[i]);
+            }else {
+                let newSection = {
+                    text:sections[i].text,
+                    questions:[]
+                };
+                for(let j = 0;j<sections[i].questions.length;j++) {
+                    if(j !== question) {
+                        newSection.questions.push(sections[i].questions[j]);
+                    }else{
+                        let newQuestion = {
+                            text:sections[i].questions[j].text,
+                            answers:[],
+                            points:sections[i].questions[j].points
+                        };
+
+                        for(let k = 0;k<sections[i].questions[j].answers.length;k++) {
+                            if(k !== answer) {
+                                newQuestion.answers.push(sections[i].questions[j].answers[k]);
+                            }
+                        }
+
+                        newSection.questions.push(newQuestion);
+                    }
                 }
-                newQuestions[i].answers[answer].correct = true;
+                newSex.push(newSection);
             }
         }
-        setQuestions(newQuestions);
+        setSections(newSex);
+    }
+
+    const setAnswer = (section, question, answer, txt) => {
+        let newSex = [];
+        for(let i = 0;i<sections.length;i++){
+            newSex.push(sections[i]);
+            if(i === section){
+                newSex[i].questions[question].answers[answer].text = txt;
+            }
+        }
+        setSections(newSex);
+    }
+
+    const setCorrect = (section, question, answer) => {
+        let newSex = [];
+        for(let i = 0;i<sections.length;i++){
+            newSex.push(sections[i]);
+            if(i === section){
+                newSex[i].questions[question].answers[answer].correct = !newSex[i].questions[question].answers[answer].correct;
+            }
+        }
+        setSections(newSex);
     }
 
     const submit = ()=>  {
-        let data = JSON.stringify({key:props.authKey,title: tit,description: desc,questions:questions});
+        setLoading(true);
+        let data = JSON.stringify({key:props.authKey,title: tit,description: desc,sections:sections});
         axios.post(props.api + 'create?data=' + encodeURIComponent(data))
             .then(data=> {
                 let res = data.data;
@@ -251,18 +370,19 @@ const Create = (props) => {
             <span className='back' onClick={()=>changeState('title')}/>
             <span className='titDisp'>{tit}</span>
             <div className='top'>
-                <button className='addQuest' onClick={addQuest}>
+                <button className='addQuest' onClick={addSection}>
                     ajouter
                     <span className='after'/>
                 </button>
-                <button className='submit' onClick={submit}>
+                <button className={`submit${loading ? ' dis':''}`} onClick={submit}>
                     soumettre
                     <span className='after'/>
                 </button>
+                <span className={`load${loading ? ' dis':''}`}>Loading...</span>
             </div>
             <div className='qlist'>
                 {
-                questions.map((val,index) => <Question setCorrect={setCorrect} setAnswer={setAnswer} deleteAnswer={deleteAnswer} addAnswer={addAnswer} incPoints={incPoints} decPoints={decPoints} updateText={updateText} deleteSelf={deleteQuest} key={index} pos={index} data={val}/>)
+                sections.map((val,index) => <Section size={sections.length} updateSection={updateSection} addQuest={addQuest} setCorrect={setCorrect} setAnswer={setAnswer} deleteAnswer={deleteAnswer} addAnswer={addAnswer} incPoints={incPoints} decPoints={decPoints} updateText={updateText} deleteQuest={deleteQuest} deleteSection={deleteSection} key={index} pos={index} data={val}/>)
                 }
             </div>
         </div> : ''}

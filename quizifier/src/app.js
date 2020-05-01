@@ -64,13 +64,23 @@ const Question = (props) => {
   </div>;
 }
 
+const Section = (props) => {
+  const selectAnswer = (question, answer)=> {
+    props.selectAnswer(props.pos, question, answer);
+  }
+
+  return <div className='section'>
+    <div className='head'>{props.data.tit}</div>
+    {props.data.questions.map((val,index) => <Question key={index} selectAnswer={selectAnswer} answer={props.answers[index]} pos={index} data={val}/>)}
+  </div>;
+}
+
 const Open = (props) => {
   const [errorText, setErrortext] = useState('');
   const [error, setError] = useState(false);
 
   const scr = (val)=> {
     let elem = document.getElementById('head');
-    elem.style.top = val+'px';
     if(val > 100) {
       elem.classList.add('collapsed');
     }else if(val < 64){
@@ -100,7 +110,7 @@ const Open = (props) => {
       <span className='desc'>{props.desc}</span>
     </div>
 
-    {props.questions.map((val,index) => <Question key={index} selectAnswer={props.selectAnswer} answer={props.answers[index]} pos={index} data={val}/>)}
+    {props.sections.map((val,index) => <Section key={index} selectAnswer={props.selectAnswer} answers={props.answers[index]} pos={index} data={val}/>)}
   
     <div className='bottom'>
       <span className={`error${error ? ' shown':''}`}>{errorText}</span>
@@ -110,40 +120,54 @@ const Open = (props) => {
 }
 
 const Correction = (props) => {
+  const [tq, setTq] = useState(0);
   const [ca, setCa] = useState(0);
   const [sc, setSc] = useState(0);
   const [tot, setTot] = useState(0);
 
   useEffect(()=> {
+    let tqn = 0;
     let coa = 0;
     let score = 0;
     let total = 0;
 
-    for(let i = 0;i<props.questions.length;i++) {
-      let cor = false;
-      for(let j = 0;j<props.questions[i].answers.length;j++) {
-        let ans = props.questions[i].answers[j];
-        if(ans.correct === 1) {
-          if(props.answers[i] === j) {
-            coa++;
-            cor = true;
+    for(let a = 0;a<props.sections.length;a++) {
+      let section = props.sections[a];
+      let answers = props.answers[a];
+
+      for(let i = 0;i<section.questions.length;i++) {
+        tqn++;
+
+        let question = section.questions[i];
+        let cor = false;
+
+        for(let j = 0;j<question.answers.length;j++) {
+          let answer = question.answers[j];
+
+          if(answer.correct === 1) {
+            if(answers[i] === j) {
+              coa++;
+              cor = true;
+            }
           }
         }
+
+        total += question.points;
+        score += cor ? question.points : 0;
       }
-      total += props.questions[i].points;
-      score += cor ? props.questions[i].points : 0;
     }
 
+    setTq(tqn);
     setCa(coa);
     setSc(score);
     setTot(total);
 
   }, [props])
 
-  const isCorrect = (quest) => {
-    for(let i = 0;i<props.questions[quest].answers.length;i++) {
-      if(props.questions[quest].answers[i].correct === 1) {
-        if(props.answers[quest] === i) {
+  const isCorrect = (section, quest) => {
+    for(let i = 0;i<props.sections[section].questions[quest].answers.length;i++) {
+      if(props.sections[section].questions[quest].answers[i].correct === 1) {
+        if(props.answers[section][quest] === i) {
           return true;
         }else{
           return false;
@@ -159,8 +183,8 @@ const Correction = (props) => {
         Vous avez
         <span className='number good'>{ca}</span>
         {`bonne${ca === 1 ? '':'s'} réponse${ca === 1 ? '':'s'}`} et
-        <span className='number bad'>{props.questions.length - ca}</span>
-        {`mauvaise${(props.questions.length - ca) === 1 ? '':'s'} réponse${(props.questions.length - ca) === 1 ? '':'s'}`}.
+        <span className='number bad'>{tq - ca}</span>
+        {`mauvaise${(tq - ca) === 1 ? '':'s'} réponse${(tq - ca) === 1 ? '':'s'}`}.
       </span>
       <span className='line'>
         Vous avez obtenu
@@ -175,17 +199,22 @@ const Correction = (props) => {
     </div>
 
     <div className='detailed'>
-      {props.questions.map((question, qi) => {
-        return <div key={qi} className={`question ${isCorrect(qi) ? 'correct':'incorrect'}`}>
-          <div className='top'>
-            <span className='txt'>{question.text}</span>
-            <span className='points'>{question.points} points</span>
-          </div>
+      {props.sections.map((section, si) => {
+        return <div className='section'>
+          <div className='head'>{section.tit}</div>
+          {section.questions.map((question, qi) => {
+            return <div key={qi} className={`question ${isCorrect(si, qi) ? 'correct':'incorrect'}`}>
+              <div className='top'>
+                <span className='txt'>{question.text}</span>
+                <span className='points'>{question.points} points</span>
+              </div>
 
-          {question.answers.map((answer, ai) => {
-            return <div key={ai} className={`answer${answer.correct === 1 ? ' correct':' incorrect'}${props.answers[qi] === ai ? ' selected':''}`}>{alpha[ai] + ' - ' + answer.text}</div>;
+              {question.answers.map((answer, ai) => {
+                return <div key={ai} className={`answer${answer.correct === 1 ? ' correct':' incorrect'}${props.answers[si][qi] === ai ? ' selected':''}`}>{alpha[ai] + ' - ' + answer.text}</div>;
+              })}
+            </div>;
           })}
-        </div>;
+        </div>
       })}
     </div>
   </div>;
@@ -236,7 +265,7 @@ const Quiz = (props) => {
 
   const [tit, setTit] = useState('');
   const [desc, setDesc] = useState('');
-  const [questions, setQuestions] = useState([]);
+  const [sections, setSections] = useState([]);
   const [answers, setAnswers] = useState([]);
 
   const [ready, setReady] = useState(false);
@@ -244,14 +273,21 @@ const Quiz = (props) => {
   useEffect(() => {
     axios.post(props.api + 'getQuiz?id='+id).then(data => {
       let quiz = data.data;
-      setTit(quiz.title);
-      setDesc(quiz.description);
-      setQuestions(quiz.questions);
+      console.log(quiz);
+      setTit(quiz.tit);
+      setDesc(quiz.desc);
+      setSections(quiz.sections);
 
       if(action === 'open'){
         let ans = [];
-        for(let i = 0;i<quiz.questions.length;i++) {
-          ans.push(-1);
+        for(let i = 0;i<quiz.sections.length;i++) {
+          let secAns = [];
+
+          for(let j = 0; j<quiz.sections[i].questions.length;j++) {
+            secAns.push(-1);
+          }
+
+          ans.push(secAns);
         }
         setAnswers(ans);
       }else if(action==='correct'){
@@ -266,21 +302,18 @@ const Quiz = (props) => {
         setChoix(JSON.parse(params[1]));
       }
       
-      document.title = quiz.title;
+      document.title = quiz.tit;
 
       setReady(true);
     });
   }, []);
 
-  const selectAnswer = (question, answer)=> {
+  const selectAnswer = (section, question, answer)=> {
     let newAnswers = [];
     for(let i = 0;i<answers.length;i++){
-      if(i === question) {
-        newAnswers.push(answer);
-      }else{
-        newAnswers.push(answers[i]);
-      }
+      newAnswers.push(answers[i]);
     }
+    newAnswers[section][question] = answer;
     setAnswers(newAnswers);
   }
 
@@ -333,9 +366,9 @@ const Quiz = (props) => {
 
   return <div className="app">
       {ready && action === 'open' ? (
-          state==='choix' ? <Choix setChoix={setCh} submitChoix={submitChoix} choix={choix}/>:<Open submitAnswers={submitAnswers} selectAnswer={selectAnswer} answers={answers} tit={tit} desc={desc} questions={questions}/>
+          state==='choix' ? <Choix setChoix={setCh} submitChoix={submitChoix} choix={choix}/>:<Open submitAnswers={submitAnswers} selectAnswer={selectAnswer} answers={answers} tit={tit} desc={desc} sections={sections}/>
         ):''}
-      {ready && action === 'correct' ? <Correction choix={choix} answers={answers} tit={tit} desc={desc} questions={questions}/>:''}
+      {ready && action === 'correct' ? <Correction choix={choix} answers={answers} tit={tit} desc={desc} sections={sections}/>:''}
       {!ready ? <div className='loading'>
         <span className='loader'/>
       </div>:''}

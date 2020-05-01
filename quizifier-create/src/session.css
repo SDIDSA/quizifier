@@ -14,6 +14,7 @@
     border-bottom: none;
     border-color: lightgray;
     margin: 0;
+    opacity: .5;
 }
 
 .session .home {
@@ -160,16 +161,40 @@
 
 .session>.create>.questions>.top {
     text-align: center;
+    position: relative;
+    max-width: 470px;
+    margin: auto;
 }
 
 .session>.create>.questions>.top>button {
     width: calc(50% - 10px);
-    max-width: 230px;
+    max-width: 1000px;
     font-size: small;
+}
+
+.session>.create>.questions>.top>.load {
+    width: calc(50% - 10px);
+    position: absolute;
+    text-align: center;
+    right: 0;
+    top: 31px;
+    font-size: small;
+    font-weight: bold;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.session>.create>.questions>.top>.load.dis {
+    opacity: 1;
 }
 
 .session>.create>.questions>.top>.addQuest {
     margin-right: 20px;
+}
+
+.session>.create>.questions>.top>.submit.dis {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .session>.create>.questions>.qlist {
@@ -179,23 +204,75 @@
     padding-bottom: 20px;
 }
 
-.session>.create>.questions>.qlist>.question {
-    padding: 20px;
-    width: calc(100% - 40px);
-    max-width: 460px;
+.session>.create>.questions>.qlist>.section {
     background-color: white;
+    display: block;
     margin-top: 20px;
-    text-align: left;
     border-radius: 5px;
+    width: calc(100% - 20px);
+    max-width: 460px;
     box-shadow: 0 0 7px rgba(0,0,0,.5);
+    padding: 10px;
+    padding-top: 0;
 }
 
-.session>.create>.questions>.qlist>.question>.top {
+.session>.create>.questions>.qlist>.section>.head {
+    display: block;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid darkgray;
+}
+
+.session>.create>.questions>.qlist>.section>.head>input {
+    font-size: large;
+    text-align: center;
+    padding: 10px;
+    border: none;
+    width: calc(100% - 20px);
+    text-transform: none;
+}
+
+.session>.create>.questions>.qlist>.section>.head>button {
+    font-size: small;
+    width: 50%;
+    border: none;
+    color: black;
+    margin-bottom: 15px;
+    position: relative;
+    overflow: visible;
+}
+
+.session>.create>.questions>.qlist>.section>.head>button.dis {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.session>.create>.questions>.qlist>.section>.head>button>.ad {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    opacity: 1;
+    bottom: -5px;
+}
+
+.session>.create>.questions>.qlist>.section>.question {
+    text-align: left;
+    padding: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.session>.create>.questions>.qlist>.section>.question + .question {
+    border-top: 1px solid darkgray;
+}
+
+.session>.create>.questions>.qlist>.section>.question>.top {
     display: block;
     margin-bottom: 15px;
 }
 
-.session>.create>.questions>.qlist>.question>.top>.questText {
+.session>.create>.questions>.qlist>.section>.question>.top>.questText {
     font-size: large;
     display: inline-block;
     width: calc(100% - 70px);
@@ -209,7 +286,7 @@
     text-transform: none;
 }
 
-.session>.create>.questions>.qlist>.question>.top>.points {
+.session>.create>.questions>.qlist>.section>.question>.top>.points {
     width: 60px;
     height: 30px;
     padding: 0;
@@ -220,7 +297,7 @@
     bottom: 22px;
 }
 
-.session>.create>.questions>.qlist>.question>.top>.points::after {
+.session>.create>.questions>.qlist>.section>.question>.top>.points::after {
     content: 'points';
     position: absolute;
     width: 100%;
@@ -229,7 +306,7 @@
     bottom: -25px;
 }
 
-.session>.create>.questions>.qlist>.question>.top>.points>.inc {
+.session>.create>.questions>.qlist>.section>.question>.top>.points>.inc {
     display: inline-block;
     width: 20px;
     height: 100%;
@@ -244,7 +321,7 @@
     border-bottom-right-radius: 10px;
 }
 
-.session>.create>.questions>.qlist>.question>.top>.points>.dec {
+.session>.create>.questions>.qlist>.section>.question>.top>.points>.dec {
     display: inline-block;
     width: 20px;
     height: 100%;
@@ -259,7 +336,7 @@
     border-top-left-radius: 10px;
 }
 
-.session>.create>.questions>.qlist>.question>.top>.points>.val {
+.session>.create>.questions>.qlist>.section>.question>.top>.points>.val {
     display: inline-block;
     width: 20px;
     height: calc(100% - 2px);
@@ -273,27 +350,28 @@
 
 /* ------------------- */
 
-.session>.create>.questions>.qlist>.question>.answers {
+.session>.create>.questions>.qlist>.section>.question>.answers {
     padding: 10px;
     display: flex;
     flex-direction: column;
 }
 
-.session>.create>.questions>.qlist>.question>.answers>.answer {
+.session>.create>.questions>.qlist>.section>.question>.answers>.answer {
     position: relative;
     padding: 10px;
 }
 
-.session>.create>.questions>.qlist>.question>.answers>.answer>input {
+.session>.create>.questions>.qlist>.section>.question>.answers>.answer>input {
     padding: 0;
     border: none;
     margin-left: 10px;
-    font-size: 16px;
+    font-size: 15px;
     text-transform: none;
     user-select: auto;
+    width: calc(100% - 80px);
 }
 
-.session>.create>.questions>.qlist>.question>.answers>.answer>.delete {
+.session>.create>.questions>.qlist>.section>.question>.answers>.answer>.delete {
     position: absolute;
     right: 0;
     top: 5px;
@@ -305,7 +383,7 @@
     transform: scale(.8);
 }
 
-.session>.create>.questions>.qlist>.question>.answers>.answer>.stat {
+.session>.create>.questions>.qlist>.section>.question>.answers>.answer>.stat {
     position: absolute;
     right: 30px;
     top: 5px;
@@ -316,11 +394,11 @@
     cursor: pointer;
     transform: scale(.8);
 }
-.session>.create>.questions>.qlist>.question>.answers>.answer>.stat.correct {
+.session>.create>.questions>.qlist>.section>.question>.answers>.answer>.stat.correct {
     background-image: url('images/correct.svg');
 }
 
-.session>.create>.questions>.qlist>.question>.answers>.add {
+.session>.create>.questions>.qlist>.section>.question>.answers>.add {
     align-self: center;
     font-size: small;
     max-width: 250px;
@@ -330,7 +408,7 @@
 
 /* ------------------- */
 
-.session>.create>.questions>.qlist>.question>.bottom {
+.session>.create>.questions>.qlist>.section>.question>.bottom {
     height: 30px;
     margin-top: 15px;
     display: flex;
@@ -338,7 +416,7 @@
     justify-content: space-between;
 }
 
-.session>.create>.questions>.qlist>.question>.bottom>.delete {
+.session>.create>.questions>.qlist>.section>.question>.bottom>.delete {
     display: inline-block;
     height: 30px;
     width: 30px;
@@ -346,7 +424,7 @@
     cursor: pointer;
 }
 
-.session>.create>.questions>.qlist>.question>.bottom>.delete>.icon {
+.session>.create>.questions>.qlist>.section>.question>.bottom>.delete>.icon {
     display: inline-block;
     height: 100%;
     width: 100%;
@@ -354,7 +432,7 @@
     background-size: contain;
 }
 
-.session>.create>.questions>.qlist>.question>.bottom>.delete>.hint {
+.session>.create>.questions>.qlist>.section>.question>.bottom>.delete>.hint {
     position: absolute;
     top: 5px;
     left: -40px;
@@ -418,20 +496,30 @@
         letter-spacing: 3px;
     }
 
-    .session>.create>.questions>.qlist>.question>.answers>.answer>.delete:hover {
+    .session>.create>.questions>.qlist>.section>.question>.answers>.answer>.delete:hover {
         transform: scale(1.1) rotate(10deg);
     }
 
-    .session>.create>.questions>.qlist>.question>.answers>.add:hover {
+    .session>.create>.questions>.qlist>.section>.question>.answers>.add:hover {
         color: black;
     }
 
-    .session>.create>.questions>.qlist>.question>.bottom>.delete:hover>.hint{
+    .session>.create>.questions>.qlist>.section>.question>.bottom>.delete:hover>.hint{
         opacity: 1;
         left: -80px;
     }
 
-    .session>.create>.questions>.qlist>.question>.bottom>.delete:hover>.icon {
+    .session>.create>.questions>.qlist>.section>.question>.bottom>.delete:hover>.icon {
         transform: rotate(10deg) scale(1.2);
+    }
+
+    .session>.create>.questions>.qlist>.section>.head>button>.ad {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    .session>.create>.questions>.qlist>.section>.head>button:hover>.ad {
+        bottom: -5px;
+        opacity: 1;
     }
 }
