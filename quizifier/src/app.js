@@ -31,6 +31,8 @@ const getCh = (score, total, choix) => {
     return univs[choix[2]];
   }else if(moy >= 5) {
     return univs[choix[3]];
+  }else{
+    return "Orienté vers l'Université";
   }
 }
 
@@ -90,10 +92,12 @@ const Open = (props) => {
 
   const submit = () => {
     let res = true;
-    props.answers.forEach(ans => {
-      if(ans === -1) {
-        res = false;
-      }
+    props.answers.forEach(sec => {
+      sec.forEach(ans => {
+        if(ans === -1) {
+          res = false;
+        }
+      })
     });
     if(!res) {
       setErrortext(`Vous n'avez pas répondu à toutes les questions`);
