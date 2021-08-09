@@ -1,7 +1,7 @@
 # quizifier
 A quiz creation platform, written in javascript
 
-see it working at https://quizifier.herokuapp.com/m5apmp9mtz/open
+see it working at https://quizifier-js.herokuapp.com/5bvo2tb0h3/open/
 
-try creating quizes at https://quizifier-create.herokuapp.com
-(it will ask for a password, which is just hardcoded in the server source.)
+try creating quizes at https://quizifier-js.herokuapp.com/create/
+(it will ask for a password, it's hardcoded in the server source.)
